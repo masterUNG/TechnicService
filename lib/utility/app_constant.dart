@@ -14,9 +14,32 @@ class AppConstant {
   static String pageAccountUser = '/accountUser';
   static String pageAccountTeachnic = '/accountTeachnic';
 
-
   static Color dark = Colors.black;
   static Color bgColor = Colors.white;
+
+  BoxDecoration borderCurveBox() {
+    return BoxDecoration(
+      border: Border.all(),borderRadius: BorderRadius.circular(10)
+    );
+  }
+
+  BoxDecoration curveBox() {
+    return BoxDecoration(
+      color: bgColor,
+      borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(60), topRight: Radius.circular(60)),
+    );
+  }
+
+  BoxDecoration imageBox({required String path, double? opacity}) {
+    return BoxDecoration(
+      image: DecorationImage(
+        opacity: opacity ?? 1,
+        image: AssetImage(path),
+        fit: BoxFit.cover,
+      ),
+    );
+  }
 
   TextStyle h1Style({Color? color}) {
     return TextStyle(

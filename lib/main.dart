@@ -10,8 +10,14 @@ var getPages = <GetPage<dynamic>>[
     name: AppConstant.pageAuthen,
     page: () => const Authen(),
   ),
-  GetPage(name: AppConstant.pageAccountUser, page: () => const CreateAccountUser(),),
-  GetPage(name: AppConstant.pageAccountTeachnic, page: () => const CreateAccountTeachnic(),),
+  GetPage(
+    name: AppConstant.pageAccountUser,
+    page: () => const CreateAccountUser(),
+  ),
+  GetPage(
+    name: AppConstant.pageAccountTeachnic,
+    page: () => const CreateAccountTeachnic(),
+  ),
 ];
 
 void main() {

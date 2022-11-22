@@ -10,6 +10,7 @@ class WidgetLogo extends StatelessWidget {
   }) : super(key: key);
 
   final double sizeLogo;
+  
 
   @override
   Widget build(BuildContext context) {
