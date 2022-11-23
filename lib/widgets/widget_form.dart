@@ -9,6 +9,7 @@ class WidgetForm extends StatelessWidget {
     this.suffixWidget,
     this.obscecu,
     this.labelWidget,
+    this.textInputType,
   }) : super(key: key);
 
   final String? hint;
@@ -16,6 +17,7 @@ class WidgetForm extends StatelessWidget {
   final Widget? suffixWidget;
   final bool? obscecu;
   final Widget? labelWidget;
+  final TextInputType? textInputType;
   
 
   @override
@@ -24,7 +26,7 @@ class WidgetForm extends StatelessWidget {
       margin: const EdgeInsets.only(top: 16),
       width: 250,
       height: 40,
-      child: TextFormField(
+      child: TextFormField(keyboardType: textInputType,
         obscureText: obscecu ?? false,
         onChanged: changeFunc,
         decoration: InputDecoration(label: labelWidget,

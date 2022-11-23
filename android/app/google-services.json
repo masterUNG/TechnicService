@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "79994757183",
+    "project_id": "teachnicservice",
+    "storage_bucket": "teachnicservice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79994757183:android:bffab8af95185854e8d88a",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.technicservice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79994757183-lq9aabalvpbek3ijkuvllnoit6b0inv6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ4uCXzQau1drfcgFP-nl9rqK2mjoImWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79994757183-lq9aabalvpbek3ijkuvllnoit6b0inv6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
