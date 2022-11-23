@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       getPages: getPages,
       initialRoute: AppConstant.pageAuthen,
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: Colors.indigo,
         appBarTheme: AppBarTheme(
           backgroundColor: AppConstant.bgColor,
           foregroundColor: AppConstant.dark,

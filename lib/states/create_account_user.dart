@@ -1,27 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:technicservice/utility/app_constant.dart';
+import 'package:technicservice/utility/app_service.dart';
 import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_form.dart';
+import 'package:technicservice/widgets/widget_google_map.dart';
 import 'package:technicservice/widgets/widget_icon_button.dart';
 import 'package:technicservice/widgets/widget_image.dart';
-import 'package:technicservice/widgets/widget_logo.dart';
 import 'package:technicservice/widgets/widget_menu.dart';
+import 'package:technicservice/widgets/widget_progress.dart';
 import 'package:technicservice/widgets/widget_text.dart';
 
-class CreateAccountUser extends StatelessWidget {
+class CreateAccountUser extends StatefulWidget {
   const CreateAccountUser({super.key});
+
+  @override
+  State<CreateAccountUser> createState() => _CreateAccountUserState();
+}
+
+class _CreateAccountUserState extends State<CreateAccountUser> {
+  Position? position;
+
+  @override
+  void initState() {
+    super.initState();
+    findPosition();
+  }
+
+  Future<void> findPosition() async {
+    await AppService().processFindPosition(context: context).then((value) {
+      position = value;
+      print('position = ${position.toString()}');
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppConstant.bgColor,
-      // appBar: AppBar(
-      //   title: WidgetText(
-      //     text: AppConstant.typeUserShows[0],
-      //     textStyle: AppConstant().h2Style(),
-      //   ),
-      // ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints boxConstraints) {
@@ -76,14 +94,12 @@ class CreateAccountUser extends StatelessWidget {
                                 const WidgetText(text: 'เบอร์โทรศัพย์'),
                             changeFunc: (p0) {},
                           ),
-                           WidgetForm(
-                            labelWidget:
-                                const WidgetText(text: 'Email'),
+                          WidgetForm(
+                            labelWidget: const WidgetText(text: 'Email'),
                             changeFunc: (p0) {},
                           ),
-                           WidgetForm(
-                            labelWidget:
-                                const WidgetText(text: 'Password'),
+                          WidgetForm(
+                            labelWidget: const WidgetText(text: 'Password'),
                             changeFunc: (p0) {},
                           ),
                           Container(
@@ -93,9 +109,15 @@ class CreateAccountUser extends StatelessWidget {
                               textStyle: AppConstant().h2Style(),
                             ),
                           ),
-                          Container(decoration: AppConstant().borderCurveBox(),
+                          Container(padding: const EdgeInsets.all(4),
+                            decoration: AppConstant().borderCurveBox(),
                             width: 200,
                             height: 150,
+                            child: position == null
+                                ? const WidgetProgress()
+                                : WidgetGoogleMap(
+                                    lat: position!.latitude,
+                                    lng: position!.longitude),
                           ),
                           WidgetButton(
                             label: 'ยืนยัน',
