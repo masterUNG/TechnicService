@@ -13,14 +13,14 @@ class AppConstant {
   static String pageAuthen = '/authen';
   static String pageAccountUser = '/accountUser';
   static String pageAccountTeachnic = '/accountTeachnic';
+  static String pageMainHome = '/mainHome';
 
   static Color dark = Colors.black;
   static Color bgColor = Colors.white;
 
   BoxDecoration borderCurveBox() {
     return BoxDecoration(
-      border: Border.all(),borderRadius: BorderRadius.circular(10)
-    );
+        border: Border.all(), borderRadius: BorderRadius.circular(10));
   }
 
   BoxDecoration curveBox() {

@@ -4,9 +4,14 @@ import 'package:get/get.dart';
 import 'package:technicservice/states/authen.dart';
 import 'package:technicservice/states/create_account_technic.dart';
 import 'package:technicservice/states/create_account_user.dart';
+import 'package:technicservice/states/main_home.dart';
 import 'package:technicservice/utility/app_constant.dart';
 
 var getPages = <GetPage<dynamic>>[
+  GetPage(
+    name: AppConstant.pageMainHome,
+    page: () => const MainHome(),
+  ),
   GetPage(
     name: AppConstant.pageAuthen,
     page: () => const Authen(),
@@ -24,10 +29,8 @@ var getPages = <GetPage<dynamic>>[
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp().then((value) {
-     runApp(const MyApp());
+    runApp(const MyApp());
   });
-
- 
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       getPages: getPages,
-      initialRoute: AppConstant.pageAuthen,
+      initialRoute: AppConstant.pageMainHome,
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         appBarTheme: AppBarTheme(

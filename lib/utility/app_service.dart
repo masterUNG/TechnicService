@@ -9,6 +9,20 @@ import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
+  bool checkChooseTypeTechnic({required List<bool> listChooses}) {
+    bool result = true; // true ไม่เลือกอะไร ? เลย
+
+    for (var element in listChooses) {
+      if (result) {
+        if (element) {
+          result = false;
+        }
+      }
+    }
+
+    return result;
+  }
+
   Future<void> processCreateNewAccount({
     required String email,
     required String password,
