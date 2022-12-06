@@ -12,6 +12,13 @@ class AppDialog {
     required this.context,
   });
 
+  void materialDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(title: WidgetText(text: 'Materialdialog'),),
+    );
+  }
+
   void normalDialog({
     required String title,
     required String detail,

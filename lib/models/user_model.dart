@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class UserModel {
   final String name;
@@ -9,6 +11,9 @@ class UserModel {
   final String email;
   final String password;
   final String typeUser;
+  final List<String>? skillTechnic;
+  final GeoPoint geoPoint;
+
   UserModel({
     required this.name,
     required this.surName,
@@ -17,6 +22,8 @@ class UserModel {
     required this.email,
     required this.password,
     required this.typeUser,
+    this.skillTechnic,
+    required this.geoPoint,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +35,8 @@ class UserModel {
       'email': email,
       'password': password,
       'typeUser': typeUser,
+      'skillTechnic': skillTechnic,
+      'geoPoint': geoPoint,
     };
   }
 
@@ -40,8 +49,13 @@ class UserModel {
       email: (map['email'] ?? '') as String,
       password: (map['password'] ?? '') as String,
       typeUser: (map['typeUser'] ?? '') as String,
+      skillTechnic: (map['skillTechnic'] ?? []) ,
+      geoPoint: (map['geoPoint'] ?? const GeoPoint(0, 0)),
     );
   }
+
+  //skillTechnic: (map['skillTechnic'] ?? []) ,
+  //geoPoint: (map['geoPoint'] ?? const GeoPoint(0, 0)),
 
   String toJson() => json.encode(toMap());
 

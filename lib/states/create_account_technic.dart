@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:technicservice/models/typetechnic_model.dart';
+import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/utility/app_service.dart';
@@ -191,22 +192,64 @@ class _CreateAccountTeachnicState extends State<CreateAccountTeachnic> {
                         WidgetButton(
                           label: 'ยืนยัน',
                           pressFunc: () {
-                            if ((name?.isEmpty ?? true) ||
-                                (surName?.isEmpty ?? true) ||
-                                (address?.isEmpty ?? true) ||
-                                (phone?.isEmpty ?? true) ||
-                                (email?.isEmpty ?? true) ||
-                                (password?.isEmpty ?? true)) {
-                              AppDialog(context: context).normalDialog(
-                                  title: 'มีช่องว่าง ?',
-                                  detail: 'กรุณากรอกให้ ครบทุกช่อง ครับ');
-                            } else if (AppService().checkChooseTypeTechnic(
-                                listChooses: chooseTypeTechnics)) {
-                              AppDialog(context: context).normalDialog(
-                                  title: 'ยังไม่ได้เลือก ชนิดช่าง',
-                                  detail: 'กรุณาเลือก ชนิกของช่าง');
-                            } else {}
-                          },
+                            print('name = $name, surname = $surName');
+
+                              AppDialog(context: context).materialDialog();
+
+                            // if ((name?.isEmpty ?? true) ||
+                            //     (surName?.isEmpty ?? true) ||
+                            //     (address?.isEmpty ?? true) ||
+                            //     (phone?.isEmpty ?? true) ||
+                            //     (email?.isEmpty ?? true) ||
+                            //     (password?.isEmpty ?? true)) {
+                            //   // AppDialog(context: context).normalDialog(
+                            //   //     title: 'มีช่องว่าง ?',
+                            //   //     detail: 'กรุณากรอกให้ ครบทุกช่อง ครับ');
+                            //   AppDialog(context: context).materialDialog();
+                            // } else if (AppService().checkChooseTypeTechnic(
+                            //     listChooses: chooseTypeTechnics)) {
+                            //   AppDialog(context: context).normalDialog(
+                            //       title: 'ยังไม่ได้เลือก ชนิดช่าง',
+                            //       detail: 'กรุณาเลือก ชนิกของช่าง');
+                            // } else {
+                            //   print(
+                            //       'chooseTypeTechnic ---> $chooseTypeTechnics');
+
+                            //   var skillTechnics = <String>[];
+
+                            //   for (var i = 0;
+                            //       i < chooseTypeTechnics.length;
+                            //       i++) {
+                            //     if (chooseTypeTechnics[i]) {
+                            //       skillTechnics.add(typeTeachnicModels[i].name);
+                            //     }
+                            //   }
+                            //   print('skillTechnics --> $skillTechnics');
+
+                            //   UserModel userModel = UserModel(
+                            //     name: name!,
+                            //     surName: surName!,
+                            //     address: address!,
+                            //     phone: phone!,
+                            //     email: email!,
+                            //     password: password!,
+                            //     typeUser: AppConstant.typeUsers[1],
+                            //     geoPoint: GeoPoint(
+                            //         position!.latitude, position!.longitude),
+                            //     skillTechnic: skillTechnics,
+                            //   );
+
+                            //   AppService()
+                            //       .processCreateNewAccount(
+                            //           email: email!,
+                            //           password: password!,
+                            //           context: context,
+                            //           userModel: userModel)
+                            //       .then((value) {
+                            //     // Get.offAllNamed(AppConstant.pageMainHome);
+                            //   });
+                            // }
+                          }, // onpresss
                         ),
                       ],
                     ),

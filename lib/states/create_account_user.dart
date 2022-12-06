@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -167,7 +168,9 @@ class _CreateAccountUserState extends State<CreateAccountUser> {
                                       phone: phone!,
                                       email: email!,
                                       password: password!,
-                                      typeUser: AppConstant.typeUsers[0]);
+                                      typeUser: AppConstant.typeUsers[0],
+                                      geoPoint: GeoPoint(position!.latitude,
+                                          position!.longitude));
 
                                   print('userModel = ${userModel.toMap()}');
 
