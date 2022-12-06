@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
+import 'package:technicservice/widgets/widget_image.dart';
 import 'package:technicservice/widgets/widget_menu.dart';
 import 'package:technicservice/widgets/widget_progress.dart';
 import 'package:technicservice/widgets/widget_text.dart';
@@ -30,8 +31,8 @@ class _MainHomeState extends State<MainHome> {
 
   Future<void> checkLogin() async {
     print('userModelLogins --> ${controller.userModelLogins}');
-    await controller.findUserModelLogins().then(
-        (value) => print('userModelLogins last --> ${controller.userModelLogins}'));
+    await controller.findUserModelLogins().then((value) =>
+        print('userModelLogins last --> ${controller.userModelLogins}'));
 
     FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event == null) {
@@ -47,28 +48,105 @@ class _MainHomeState extends State<MainHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: WidgetText(
-          text: 'Main Home',
-          textStyle: AppConstant().h2Style(),
-        ),
-      ),
-      drawer: load
-          ? const WidgetProgress()
-          : Drawer(
-              child: Column(
-                children: [
-                  UserAccountsDrawerHeader(
-                      accountName: null, accountEmail: null),
-                  const Spacer(),
-                  Divider(
-                    color: AppConstant.dark,
-                  ),
-                  statusLogin! ? menuSignOut() : menuAuthen(),
-                ],
+    return GetX(
+        init: AppController(),
+        builder: (AppController appController) {
+          print('current userModel ===> ${appController.userModelLogins}');
+          return Scaffold(
+            appBar: AppBar(
+              title: WidgetText(
+                text: 'Main Home',
+                textStyle: AppConstant().h2Style(),
               ),
             ),
+            drawer: load
+                ? const WidgetProgress()
+                : Drawer(
+                    child: Column(
+                      children: [
+                        headDrawer(appController),
+                        WidgetMenu(
+                          leadWidget: const WidgetImage(
+                            path: 'images/home.png',
+                          ),
+                          title: 'หน้าหลัก',
+                          tapFunc: () {
+                            Get.back();
+                          },
+                        ),
+                        statusLogin!
+                            ? appController.userModelLogins[0].typeUser ==
+                                    AppConstant.typeUsers[1]
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      WidgetMenu(
+                                        leadWidget: const WidgetImage(
+                                          path: 'images/message.png',
+                                        ),
+                                        title: 'ข่าวสาร',
+                                        tapFunc: () {
+                                           Get.back();
+                                        },
+                                      ),
+                                      WidgetMenu(
+                                        leadWidget: const WidgetImage(
+                                          path: 'images/profile.png',
+                                        ),
+                                        title: 'Profile',
+                                        tapFunc: () {
+                                           Get.back();
+                                        },
+                                      ),
+                                      WidgetMenu(
+                                        leadWidget: const WidgetImage(
+                                          path: 'images/referance.png',
+                                        ),
+                                        title: 'Referance',
+                                        tapFunc: () {
+                                           Get.back();
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                : WidgetMenu(
+                                    leadWidget: const WidgetImage(
+                                      path: 'images/message.png',
+                                    ),
+                                    title: 'ข่าวสาร',
+                                    tapFunc: () {
+                                       Get.back();
+                                    },
+                                  )
+                            : const SizedBox(),
+                        const Spacer(),
+                        Divider(
+                          color: AppConstant.dark,
+                        ),
+                        statusLogin! ? menuSignOut() : menuAuthen(),
+                      ],
+                    ),
+                  ),
+          );
+        });
+  }
+
+  UserAccountsDrawerHeader headDrawer(AppController appController) {
+    return UserAccountsDrawerHeader(
+      decoration: AppConstant().imageBox(path: 'images/bg2.jpg', opacity: 0.5),
+      accountName: appController.userModelLogins.isEmpty
+          ? null
+          : WidgetText(
+              text: appController.userModelLogins[0].name,
+              textStyle: AppConstant().h2Style(),
+            ),
+      accountEmail: appController.userModelLogins.isEmpty
+          ? null
+          : WidgetText(
+              text: 'Type : ${appController.userModelLogins[0].typeUser}',
+              textStyle: AppConstant().h3Style(fontWeight: FontWeight.w500),
+            ),
+      currentAccountPicture: const WidgetImage(),
     );
   }
 
