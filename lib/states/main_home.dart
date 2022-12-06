@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:technicservice/utility/app_constant.dart';
+import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/widgets/widget_menu.dart';
 import 'package:technicservice/widgets/widget_progress.dart';
@@ -19,6 +20,8 @@ class _MainHomeState extends State<MainHome> {
   bool? statusLogin; // true => Login, false => LogOut
   bool load = true;
 
+  AppController controller = Get.put(AppController());
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +29,10 @@ class _MainHomeState extends State<MainHome> {
   }
 
   Future<void> checkLogin() async {
+    print('userModelLogins --> ${controller.userModelLogins}');
+    await controller.findUserModelLogins().then(
+        (value) => print('userModelLogins last --> ${controller.userModelLogins}'));
+
     FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event == null) {
         statusLogin = false;
