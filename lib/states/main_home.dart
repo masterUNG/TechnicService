@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:technicservice/bodys/main_center.dart';
+import 'package:technicservice/bodys/message_teachnic.dart';
+import 'package:technicservice/bodys/message_user.dart';
+import 'package:technicservice/bodys/profile_teachnic.dart';
+import 'package:technicservice/bodys/referance_teachnic.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
@@ -23,6 +28,16 @@ class _MainHomeState extends State<MainHome> {
 
   AppController controller = Get.put(AppController());
 
+  var bodys = <Widget>[
+    const MainCenter(),
+    const MessageTeachnic(),
+    const ProfileTeachnic(),
+    const ReferanceTeachnic(),
+    const MessageUser(),
+  ];
+
+  var titles = <String>['หน้าหลัก', 'ข่าวสาร', 'Profile', 'Referance', 'ข่าวสาร', ];
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +54,7 @@ class _MainHomeState extends State<MainHome> {
         statusLogin = false;
       } else {
         statusLogin = true;
+        controller.findUserModel(uid: event.uid);
       }
 
       load = false;
@@ -55,7 +71,7 @@ class _MainHomeState extends State<MainHome> {
           return Scaffold(
             appBar: AppBar(
               title: WidgetText(
-                text: 'Main Home',
+                text: titles[appController.indexBody.value],
                 textStyle: AppConstant().h2Style(),
               ),
             ),
@@ -68,9 +84,11 @@ class _MainHomeState extends State<MainHome> {
                         WidgetMenu(
                           leadWidget: const WidgetImage(
                             path: 'images/home.png',
+                            size: 36,
                           ),
                           title: 'หน้าหลัก',
                           tapFunc: () {
+                            appController.indexBody.value = 0;
                             Get.back();
                           },
                         ),
@@ -83,28 +101,36 @@ class _MainHomeState extends State<MainHome> {
                                       WidgetMenu(
                                         leadWidget: const WidgetImage(
                                           path: 'images/message.png',
+                                          size: 36,
                                         ),
                                         title: 'ข่าวสาร',
+                                        subTitle: const WidgetText(
+                                            text: 'ข่าวสารสำหร้บ ช่าง'),
                                         tapFunc: () {
-                                           Get.back();
+                                          appController.indexBody.value = 1;
+                                          Get.back();
                                         },
                                       ),
                                       WidgetMenu(
                                         leadWidget: const WidgetImage(
                                           path: 'images/profile.png',
+                                          size: 36,
                                         ),
                                         title: 'Profile',
                                         tapFunc: () {
-                                           Get.back();
+                                          appController.indexBody.value = 2;
+                                          Get.back();
                                         },
                                       ),
                                       WidgetMenu(
                                         leadWidget: const WidgetImage(
                                           path: 'images/referance.png',
+                                          size: 36,
                                         ),
                                         title: 'Referance',
                                         tapFunc: () {
-                                           Get.back();
+                                          appController.indexBody.value = 3;
+                                          Get.back();
                                         },
                                       ),
                                     ],
@@ -112,10 +138,14 @@ class _MainHomeState extends State<MainHome> {
                                 : WidgetMenu(
                                     leadWidget: const WidgetImage(
                                       path: 'images/message.png',
+                                      size: 36,
                                     ),
                                     title: 'ข่าวสาร',
+                                    subTitle: const WidgetText(
+                                        text: 'ข่าวสารสำหร้บ สมาชิก'),
                                     tapFunc: () {
-                                       Get.back();
+                                      appController.indexBody.value = 4;
+                                      Get.back();
                                     },
                                   )
                             : const SizedBox(),
@@ -127,6 +157,7 @@ class _MainHomeState extends State<MainHome> {
                       ],
                     ),
                   ),
+            body: bodys[appController.indexBody.value],
           );
         });
   }

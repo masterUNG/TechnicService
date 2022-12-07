@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppConstant {
+
+  static String urlFreeProfile = 'https://firebasestorage.googleapis.com/v0/b/teachnicservice.appspot.com/o/profile%2F3605332_construction_engineer_hard_hat_helmet_icon.png?alt=media&token=18de348d-309c-4ed1-a003-bd6d9a70342e';
+
   static var typeUsers = <String>[
     'user',
     'teachnic',
@@ -49,11 +52,11 @@ class AppConstant {
     );
   }
 
-  TextStyle h2Style({Color? color}) {
+  TextStyle h2Style({Color? color, FontWeight? fontWeight, double? size}) {
     return TextStyle(
-      fontSize: 20,
+      fontSize: size ?? 20,
       color: color ?? dark,
-      fontWeight: FontWeight.w700,
+      fontWeight: fontWeight ?? FontWeight.w700,
     );
   }
 
