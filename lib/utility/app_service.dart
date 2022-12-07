@@ -5,12 +5,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
+  Future<File?> processTakePhoto({required ImageSource source}) async {
+    File? file;
+    var result = await ImagePicker()
+        .pickImage(source: source, maxWidth: 800, maxHeight: 800);
+    if (result != null) {
+      file = File(result.path);
+    }
+    return file;
+  }
+
   bool checkChooseTypeTechnic({required List<bool> listChooses}) {
     bool result = true; // true ไม่เลือกอะไร ? เลย
 

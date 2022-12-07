@@ -5,6 +5,7 @@ import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_google_map.dart';
+import 'package:technicservice/widgets/widget_show_head.dart';
 import 'package:technicservice/widgets/widget_show_profile.dart';
 import 'package:technicservice/widgets/widget_text.dart';
 
@@ -25,7 +26,7 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
           return ListView(
             children: [
               imageProfile(appController),
-              showHead(head: 'ข้อมูลทั่วไป :'),
+              const WidgetShowHead(head: 'ข้อมูลทั่วไป :'),
               showTitle(
                   head: 'ชื่อ :', value: appController.userModels[0].name),
               showTitle(
@@ -33,9 +34,9 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
                   value: appController.userModels[0].address),
               showTitle(
                   head: 'เบอร์โทร :', value: appController.userModels[0].phone),
-              showHead(head: 'Skill Technic :'),
+              const WidgetShowHead(head: 'Skill Technic :'),
               listSkill(appController),
-              showHead(head: 'แผนที่ร้าน :'),
+              const WidgetShowHead(head: 'แผนที่ร้าน :'),
               showMap(appController),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -92,15 +93,7 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
     );
   }
 
-  Padding showHead({required String head}) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
-      child: WidgetText(
-        text: head,
-        textStyle: AppConstant().h2Style(),
-      ),
-    );
-  }
+  
 
   Padding showTitle({required String head, required String value}) {
     return Padding(

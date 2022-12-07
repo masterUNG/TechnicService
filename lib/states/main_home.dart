@@ -36,12 +36,19 @@ class _MainHomeState extends State<MainHome> {
     const MessageUser(),
   ];
 
-  var titles = <String>['หน้าหลัก', 'ข่าวสาร', 'Profile', 'Referance', 'ข่าวสาร', ];
+  var titles = <String>[
+    'หน้าหลัก',
+    'ข่าวสาร',
+    'Profile',
+    'Referance',
+    'ข่าวสาร',
+  ];
 
   @override
   void initState() {
     super.initState();
     checkLogin();
+    controller.readAllTypeUser();
   }
 
   Future<void> checkLogin() async {
