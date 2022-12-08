@@ -9,9 +9,10 @@ import 'package:technicservice/models/user_model.dart';
 class AppController extends GetxController {
   RxBool redEye = true.obs;
   RxInt indexTypeUser = 0.obs;
+  RxInt indexBody = 0.obs;
+
   RxList<UserModel> userModelLogins = <UserModel>[].obs;
   RxList<String> uidLogins = <String>[].obs;
-  RxInt indexBody = 0.obs;
   RxList<UserModel> userModels = <UserModel>[].obs;
   RxList<File> files = <File>[].obs;
   RxList<String> typeUsers = <String>[].obs;

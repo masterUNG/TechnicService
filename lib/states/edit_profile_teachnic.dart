@@ -56,7 +56,7 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
     return GetX(
         init: AppController(),
         builder: (AppController appController) {
-          print('typeUsers ---> ${appController.typeUsers}');
+          print('##8dec typeUsers ---> ${appController.typeUsers}');
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -83,7 +83,7 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
                       generalForm(),
                       const WidgetShowHead(head: 'สกิวส์ช่าง :'),
                       listSkillDelete(appController),
-                      dropdownAddSkill(appController),
+                       dropdownAddSkill(appController),
                       const WidgetShowHead(head: 'แผนที่ร้าน :'),
                       showMap(appController),
                       bottonSave(),
@@ -128,8 +128,8 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
     );
   }
 
-  Row dropdownAddSkill(AppController appController) {
-    return Row(
+  Widget dropdownAddSkill(AppController appController) {
+    return appController.typeUsers.isEmpty ? const SizedBox() :   Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
@@ -161,7 +161,18 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
         WidgetIconButton(
           iconData: Icons.save,
           iconColor: Colors.green,
-          pressFunc: () {},
+          pressFunc: () {
+            if (chooseSkill != null) {
+              print('chooseSkill --> $chooseSkill');
+              print(
+                  'skill ก่อนเพิ่ม --> ${appController.userModels[0].skillTechnic}');
+              var skills = appController.userModels[0].skillTechnic;
+              skills?.add(chooseSkill!);
+              print('skills --> $skills');
+              map['skillTechnic'] = skills;
+              processSaveProfile();
+            }
+          },
         )
       ],
     );
@@ -318,7 +329,7 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
         .doc(controller.uidLogins[0])
         .update(map)
         .then((value) {
-      controller.findUserModelLogins();
+      // controller.findUserModelLogins();
       controller.findUserModel(uid: controller.uidLogins[0]);
       Get.back();
     });
