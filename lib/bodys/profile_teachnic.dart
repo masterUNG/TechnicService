@@ -5,6 +5,7 @@ import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_google_map.dart';
+import 'package:technicservice/widgets/widget_progress.dart';
 import 'package:technicservice/widgets/widget_show_head.dart';
 import 'package:technicservice/widgets/widget_show_profile.dart';
 import 'package:technicservice/widgets/widget_text.dart';
@@ -23,7 +24,7 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
         init: AppController(),
         builder: (AppController appController) {
           print('userModles ==> ${appController.userModels}');
-          return ListView(
+          return appController.userModels.isEmpty ? const WidgetProgress() :  ListView(
             children: [
               imageProfile(appController),
               const WidgetShowHead(head: 'ข้อมูลทั่วไป :'),
@@ -47,7 +48,10 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
                     child: WidgetButton(
                       label: 'Edit Profile',
                       pressFunc: () {
-                        Get.to(const EditProfileTechnic());
+                        Get.to(const EditProfileTechnic())!.then((value) {
+                          appController.findUserModel(
+                              uid: appController.uidLogins[0]);
+                        });
                       },
                     ),
                   ),
@@ -93,12 +97,10 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
     );
   }
 
-  
-
   Padding showTitle({required String head, required String value}) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-      child: Row(
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 2,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +10,9 @@ import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_service.dart';
 import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_form.dart';
+import 'package:technicservice/widgets/widget_google_map.dart';
 import 'package:technicservice/widgets/widget_icon_button.dart';
+import 'package:technicservice/widgets/widget_progress.dart';
 import 'package:technicservice/widgets/widget_show_head.dart';
 import 'package:technicservice/widgets/widget_show_profile.dart';
 import 'package:technicservice/widgets/widget_text.dart';
@@ -30,6 +33,8 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
 
   String? chooseSkill;
 
+  Map<String, dynamic> map = {};
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +46,9 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
     for (var element in controller.userModels[0].skillTechnic!) {
       controller.typeUsers.remove(element);
     }
+
+    map = controller.userModels[0].toMap();
+    print('map Start ==> $map');
   }
 
   @override
@@ -60,26 +68,46 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
                 WidgetIconButton(
                   iconData: Icons.save,
                   pressFunc: () {
-                    saveEditProfile();
+                    uploadNewImageProfile();
                   },
                   iconColor: Theme.of(context).primaryColor,
                 )
               ],
             ),
-            body: ListView(
-              children: [
-                imageProfile(appController),
-                const WidgetShowHead(head: 'ข้อมูลทั้วไป :'),
-                generalForm(),
-                const WidgetShowHead(head: 'สกิวส์ช่าง :'),
-                listSkillDelete(appController),
-                dropdownAddSkill(appController),
-                const WidgetShowHead(head: 'แผนที่ร้าน :'),
-                bottonSave(),
-              ],
-            ),
+            body: appController.userModels.isEmpty
+                ? const WidgetProgress()
+                : ListView(
+                    children: [
+                      imageProfile(appController),
+                      const WidgetShowHead(head: 'ข้อมูลทั้วไป :'),
+                      generalForm(),
+                      const WidgetShowHead(head: 'สกิวส์ช่าง :'),
+                      listSkillDelete(appController),
+                      dropdownAddSkill(appController),
+                      const WidgetShowHead(head: 'แผนที่ร้าน :'),
+                      showMap(appController),
+                      bottonSave(),
+                    ],
+                  ),
           );
         });
+  }
+
+  Row showMap(AppController appController) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: AppConstant().borderCurveBox(),
+          width: 250,
+          height: 200,
+          child: WidgetGoogleMap(
+              lat: appController.userModels[0].geoPoint.latitude,
+              lng: appController.userModels[0].geoPoint.longitude),
+        ),
+      ],
+    );
   }
 
   Row bottonSave() {
@@ -92,7 +120,7 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
           child: WidgetButton(
             label: 'Save Profile',
             pressFunc: () {
-              saveEditProfile();
+              uploadNewImageProfile();
             },
           ),
         ),
@@ -167,8 +195,8 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
     );
   }
 
-  Container generalForm() {
-    return Container(
+  Widget generalForm() {
+    return SizedBox(
       width: 250,
       child: Column(
         children: [
@@ -178,7 +206,10 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
               textStyle: AppConstant().h3Style(),
             ),
             textEditingController: nameController,
-            changeFunc: (p0) {},
+            changeFunc: (p0) {
+              String name = p0.trim();
+              map['name'] = name;
+            },
           ),
           WidgetForm(
             labelWidget: WidgetText(
@@ -186,15 +217,22 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
               textStyle: AppConstant().h3Style(),
             ),
             textEditingController: addressController,
-            changeFunc: (p0) {},
+            changeFunc: (p0) {
+              String address = p0.trim();
+              map['address'] = address;
+            },
           ),
           WidgetForm(
+            textInputType: TextInputType.phone,
             labelWidget: WidgetText(
               text: 'เบอร์โทร :',
               textStyle: AppConstant().h3Style(),
             ),
             textEditingController: phoneController,
-            changeFunc: (p0) {},
+            changeFunc: (p0) {
+              String phone = p0.trim();
+              map['phone'] = phone;
+            },
           ),
         ],
       ),
@@ -257,20 +295,32 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
     );
   }
 
-  Future<void> saveEditProfile() async {
+  Future<void> uploadNewImageProfile() async {
     if (controller.files.isNotEmpty) {
       //มีการ เปลี่ยนภาพ
-
       String nameFile =
           '${controller.uidLogins[0]}${Random().nextInt(1000000)}.jpg';
-     
-
-      String? urlImage = await AppService().processUploadImage(path: 'profile/$nameFile');
-       print('Have Photo $urlImage');
-
+      String? urlImage =
+          await AppService().processUploadImage(path: 'profile/$nameFile');
+      print('Have Photo $urlImage');
+      map['urlProfile'] = urlImage;
+      processSaveProfile();
     } else {
       //ไม่มีการเปลี่ยนภาพ
       print('No Photo');
+      processSaveProfile();
     }
+  }
+
+  Future<void> processSaveProfile() async {
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(controller.uidLogins[0])
+        .update(map)
+        .then((value) {
+      controller.findUserModelLogins();
+      controller.findUserModel(uid: controller.uidLogins[0]);
+      Get.back();
+    });
   }
 }
