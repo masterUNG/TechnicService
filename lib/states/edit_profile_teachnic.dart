@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
+import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/utility/app_service.dart';
 import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_form.dart';
@@ -57,6 +58,7 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
         init: AppController(),
         builder: (AppController appController) {
           print('##8dec typeUsers ---> ${appController.typeUsers}');
+          print('##8dec typeUsers ขนาด ---> ${appController.typeUsers.length}');
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -83,7 +85,7 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
                       generalForm(),
                       const WidgetShowHead(head: 'สกิวส์ช่าง :'),
                       listSkillDelete(appController),
-                       dropdownAddSkill(appController),
+                      dropdownAddSkill(appController),
                       const WidgetShowHead(head: 'แผนที่ร้าน :'),
                       showMap(appController),
                       bottonSave(),
@@ -129,60 +131,62 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
   }
 
   Widget dropdownAddSkill(AppController appController) {
-    return appController.typeUsers.isEmpty ? const SizedBox() :   Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 200,
-          child: DropdownButton(
-            isExpanded: true,
-            hint: WidgetText(
-              text: 'เพิ่ม สกิวส์ช่าง',
-              textStyle: AppConstant().h3Style(),
-            ),
-            value: chooseSkill,
-            items: appController.typeUsers
-                .map(
-                  (element) => DropdownMenuItem(
-                    child: WidgetText(
-                      text: element,
-                      textStyle: AppConstant().h3Style(),
-                    ),
-                    value: element,
+    return appController.typeUsers.isEmpty
+        ? const SizedBox()
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: DropdownButton(
+                  isExpanded: true,
+                  hint: WidgetText(
+                    text: 'เพิ่ม สกิวส์ช่าง',
+                    textStyle: AppConstant().h3Style(),
                   ),
-                )
-                .toList(),
-            onChanged: (value) {
-              chooseSkill = value;
-              setState(() {});
-            },
-          ),
-        ),
-        WidgetIconButton(
-          iconData: Icons.save,
-          iconColor: Colors.green,
-          pressFunc: () {
-            if (chooseSkill != null) {
-              print('chooseSkill --> $chooseSkill');
-              print(
-                  'skill ก่อนเพิ่ม --> ${appController.userModels[0].skillTechnic}');
-              var skills = appController.userModels[0].skillTechnic;
-              skills?.add(chooseSkill!);
-              print('skills --> $skills');
-              map['skillTechnic'] = skills;
-              processSaveProfile();
-            }
-          },
-        )
-      ],
-    );
+                  value: chooseSkill,
+                  items: appController.typeUsers
+                      .map(
+                        (element) => DropdownMenuItem(
+                          child: WidgetText(
+                            text: element,
+                            textStyle: AppConstant().h3Style(),
+                          ),
+                          value: element,
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    chooseSkill = value;
+                    setState(() {});
+                  },
+                ),
+              ),
+              WidgetIconButton(
+                iconData: Icons.save,
+                iconColor: Colors.green,
+                pressFunc: () {
+                  if (chooseSkill != null) {
+                    print('chooseSkill --> $chooseSkill');
+                    print(
+                        'skill ก่อนเพิ่ม --> ${appController.userModels[0].skillTechnic}');
+                    var skills = appController.userModels[0].skillTechnic;
+                    skills?.add(chooseSkill!);
+                    print('skills --> $skills');
+                    map['skillTechnic'] = skills;
+                    processSaveProfile();
+                  }
+                },
+              )
+            ],
+          );
   }
 
   Row listSkillDelete(AppController appController) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           width: 250,
           child: ListView.builder(
             shrinkWrap: true,
@@ -196,7 +200,23 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
                 WidgetIconButton(
                   iconData: Icons.delete_forever_outlined,
                   iconColor: Colors.red,
-                  pressFunc: () {},
+                  pressFunc: () {
+                    if (appController.userModels[0].skillTechnic!.length > 1) {
+                      String skillDelete =
+                          appController.userModels[0].skillTechnic![index];
+                      print('##8dec delete ---> $skillDelete');
+
+                      var skillTeachnics =
+                          appController.userModels[0].skillTechnic;
+                      skillTeachnics!.remove(skillDelete);
+                      map['skillTechnic'] = skillTeachnics;
+                      processSaveProfile();
+                    } else {
+                      AppDialog(context: context).normalDialog(
+                          title: 'ไม่สามารถ Delete ได้',
+                          detail: 'ช่างต้องมี สกิวส์ อย่างน้อย 1 อย่าง');
+                    }
+                  },
                 )
               ],
             ),

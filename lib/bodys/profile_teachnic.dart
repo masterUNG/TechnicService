@@ -24,41 +24,46 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
         init: AppController(),
         builder: (AppController appController) {
           print('userModles ==> ${appController.userModels}');
-          return appController.userModels.isEmpty ? const WidgetProgress() :  ListView(
-            children: [
-              imageProfile(appController),
-              const WidgetShowHead(head: 'ข้อมูลทั่วไป :'),
-              showTitle(
-                  head: 'ชื่อ :', value: appController.userModels[0].name),
-              showTitle(
-                  head: 'ที่อยู่ :',
-                  value: appController.userModels[0].address),
-              showTitle(
-                  head: 'เบอร์โทร :', value: appController.userModels[0].phone),
-              const WidgetShowHead(head: 'Skill Technic :'),
-              listSkill(appController),
-              const WidgetShowHead(head: 'แผนที่ร้าน :'),
-              showMap(appController),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, bottom: 30),
-                    width: 250,
-                    child: WidgetButton(
-                      label: 'Edit Profile',
-                      pressFunc: () {
-                        Get.to(const EditProfileTechnic())!.then((value) {
-                          appController.findUserModel(
-                              uid: appController.uidLogins[0]);
-                        });
-                      },
+          return appController.userModels.isEmpty
+              ? const WidgetProgress()
+              : ListView(
+                  children: [
+                    imageProfile(appController),
+                    const WidgetShowHead(head: 'ข้อมูลทั่วไป :'),
+                    showTitle(
+                        head: 'ชื่อ :',
+                        value: appController.userModels[0].name),
+                    showTitle(
+                        head: 'ที่อยู่ :',
+                        value: appController.userModels[0].address),
+                    showTitle(
+                        head: 'เบอร์โทร :',
+                        value: appController.userModels[0].phone),
+                    const WidgetShowHead(head: 'Skill Technic :'),
+                    listSkill(appController),
+                    const WidgetShowHead(head: 'แผนที่ร้าน :'),
+                    showMap(appController),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 30, bottom: 30),
+                          width: 250,
+                          child: WidgetButton(
+                            label: 'Edit Profile',
+                            pressFunc: () {
+                              Get.to(const EditProfileTechnic())!.then((value) {
+                                appController.findUserModel(
+                                    uid: appController.uidLogins[0]);
+                                appController.readAllTypeUser();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ],
-          );
+                  ],
+                );
         });
   }
 
@@ -100,7 +105,8 @@ class _ProfileTeachnicState extends State<ProfileTeachnic> {
   Padding showTitle({required String head, required String value}) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 2,
