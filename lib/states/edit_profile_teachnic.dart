@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,6 +56,15 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
                 text: 'แก้ไข โปรไฟร์',
                 textStyle: AppConstant().h2Style(),
               ),
+              actions: [
+                WidgetIconButton(
+                  iconData: Icons.save,
+                  pressFunc: () {
+                    saveEditProfile();
+                  },
+                  iconColor: Theme.of(context).primaryColor,
+                )
+              ],
             ),
             body: ListView(
               children: [
@@ -73,18 +83,21 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
   }
 
   Row bottonSave() {
-    return Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 16),
-                    width: 250,
-                    child: WidgetButton(
-                      label: 'Save Profile',
-                      pressFunc: () {},
-                    ),
-                  ),
-                ],
-              );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          width: 250,
+          child: WidgetButton(
+            label: 'Save Profile',
+            pressFunc: () {
+              saveEditProfile();
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Row dropdownAddSkill(AppController appController) {
@@ -142,7 +155,8 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
                 WidgetText(
                     text: appController.userModels[0].skillTechnic![index]),
                 WidgetIconButton(
-                  iconData: Icons.delete_forever_outlined,iconColor: Colors.red,
+                  iconData: Icons.delete_forever_outlined,
+                  iconColor: Colors.red,
                   pressFunc: () {},
                 )
               ],
@@ -241,5 +255,22 @@ class _EditProfileTechnicState extends State<EditProfileTechnic> {
         ),
       ],
     );
+  }
+
+  Future<void> saveEditProfile() async {
+    if (controller.files.isNotEmpty) {
+      //มีการ เปลี่ยนภาพ
+
+      String nameFile =
+          '${controller.uidLogins[0]}${Random().nextInt(1000000)}.jpg';
+     
+
+      String? urlImage = await AppService().processUploadImage(path: 'profile/$nameFile');
+       print('Have Photo $urlImage');
+
+    } else {
+      //ไม่มีการเปลี่ยนภาพ
+      print('No Photo');
+    }
   }
 }
