@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:technicservice/models/banner_model.dart';
 import 'package:technicservice/models/referance_model.dart';
 import 'package:technicservice/models/typetechnic_model.dart';
 import 'package:technicservice/models/user_model.dart';
@@ -19,6 +20,21 @@ class AppController extends GetxController {
   RxList<File> files = <File>[].obs;
   RxList<String> typeUsers = <String>[].obs;
   RxList<ReferanceModel> referanceModels = <ReferanceModel>[].obs;
+
+  RxList<BannerModel> bannerModels = <BannerModel>[].obs;
+
+  Future<void> readBanner() async {
+    if (bannerModels.isNotEmpty) {
+      bannerModels.clear();
+    }
+
+    await FirebaseFirestore.instance.collection('banner').get().then((value) {
+      for (var element in value.docs) {
+        BannerModel model = BannerModel.fromMap(element.data());
+        bannerModels.add(model);
+      }
+    });
+  }
 
   Future<void> readTechnicReferance() async {
     if (referanceModels.isNotEmpty) {
