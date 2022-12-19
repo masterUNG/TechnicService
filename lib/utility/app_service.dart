@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
@@ -14,6 +15,11 @@ import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
+  String dateTimeToString({required DateTime dateTime}) {
+    DateFormat dateFormat = DateFormat('dd MMM yyyy');
+    return dateFormat.format(dateTime);
+  }
+
   Future<String?> processUploadImage({required String path}) async {
     AppController appController = Get.put(AppController());
     String? urlImage;
