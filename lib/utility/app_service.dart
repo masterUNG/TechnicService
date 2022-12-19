@@ -15,6 +15,15 @@ import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
+  String cutWord({required String word, required int length}) {
+    String result = word;
+    if (result.length >= length) {
+      result = result.substring(0, length);
+      result = '$result...';
+    }
+    return result;
+  }
+
   String dateTimeToString({required DateTime dateTime}) {
     DateFormat dateFormat = DateFormat('dd MMM yyyy');
     return dateFormat.format(dateTime);

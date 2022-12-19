@@ -20,6 +20,29 @@ class AppController extends GetxController {
   RxList<String> typeUsers = <String>[].obs;
   RxList<ReferanceModel> referanceModels = <ReferanceModel>[].obs;
 
+  Future<void> readTechnicReferance() async {
+    if (referanceModels.isNotEmpty) {
+      referanceModels.clear();
+    }
+
+    var user = FirebaseAuth.instance.currentUser;
+
+    await FirebaseFirestore.instance
+        .collection('referance')
+        .where('uidTechnic', isEqualTo: user!.uid)
+        .get()
+        .then((value) {
+      loadRecerance.value = false;
+
+      if (value.docs.isNotEmpty) {
+        for (var element in value.docs) {
+          ReferanceModel model = ReferanceModel.fromMap(element.data());
+          referanceModels.add(model);
+        }
+      }
+    });
+  }
+
   Future<void> readAllReferance() async {
     if (referanceModels.isNotEmpty) {
       referanceModels.clear();
