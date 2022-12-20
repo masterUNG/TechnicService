@@ -40,37 +40,95 @@ class _MainCenterState extends State<MainCenter> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, BoxConstraints boxConstraints) {
-        return GetX(
-            init: AppController(),
-            builder: (AppController appController) {
-              // print(
-              //     '##8dec at main_center bannerModels --> ${appController.bannerModels}');
-              return ListView(
-                children: [
-                  const WidgetShowHead(head: 'Banner :'),
-                  displayBanner(appController),
-                  const WidgetShowHead(head: 'Technicial :'),
-                  displayGridTech(appController),
-                  const WidgetShowHead(head: 'Referance :'),
-                  appController.referanceModels.isEmpty
-                      ? const WidgetProgress()
-                      : ListView.builder(shrinkWrap: true,
-                          physics: const ScrollPhysics(),
-                          itemCount: appController.referanceModels.length,
-                          itemBuilder: (context, index) => Row(
-                            children: [
-                              WidgetText(
-                                  text: appController.referanceModels[index].nameJob),
-                            ],
-                          ),
+    return LayoutBuilder(builder: (context, BoxConstraints boxConstraints) {
+      return GetX(
+          init: AppController(),
+          builder: (AppController appController) {
+           
+            return ListView(
+              children: [
+                const WidgetShowHead(head: 'Banner :'),
+                displayBanner(appController),
+                const WidgetShowHead(head: 'Technicial :'),
+                displayGridTech(appController),
+                const WidgetShowHead(head: 'Referance :'),
+                Divider(
+                  color: AppConstant.dark,
+                  thickness: 1,
+                ),
+                listReferance(appController, boxConstraints),
+              ],
+            );
+          });
+    });
+  }
+
+  StatelessWidget listReferance(
+      AppController appController, BoxConstraints boxConstraints) {
+    return appController.referanceModels.isEmpty
+        ? const WidgetProgress()
+        : ListView.builder(
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            itemCount: appController.referanceModels.length,
+            itemBuilder: (context, index) => Column(
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: boxConstraints.maxWidth * 0.4,
+                      height: boxConstraints.maxWidth * 0.3,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: WidgetImageInternet(
+                              urlPath:
+                                  appController.referanceModels[index].urlJob),
                         ),
-                ],
-              );
-            });
-      }
-    );
+                      ),
+                    ),
+                    SizedBox(
+                      width: boxConstraints.maxWidth * 0.6,
+                      height: boxConstraints.maxWidth * 0.3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WidgetText(
+                              text: AppService().cutWord(
+                                  word: appController
+                                      .referanceModels[index].nameJob,
+                                  length: 50),
+                              textStyle: AppConstant()
+                                  .h3Style(fontWeight: FontWeight.w700),
+                            ),
+                            WidgetText(
+                              text: AppService().dateTimeToString(
+                                  dateTime: appController
+                                      .referanceModels[index].timestampJob
+                                      .toDate()),
+                              textStyle:
+                                  AppConstant().h3Style(color: Colors.red),
+                            ),
+                            WidgetText(
+                                text: appController
+                                    .technicReferanceUserModels[index].name)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: AppConstant.dark,
+                  thickness: 1,
+                ),
+              ],
+            ),
+          );
   }
 
   StatelessWidget displayGridTech(AppController appController) {
