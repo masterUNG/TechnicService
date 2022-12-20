@@ -9,9 +9,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:technicservice/models/user_model.dart';
+import 'package:technicservice/states/main_home.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
+import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
@@ -85,7 +87,17 @@ class AppService {
           .doc(uid)
           .set(userModel.toMap())
           .then((value) {
-        Get.offAllNamed(AppConstant.pageMainHome);
+        // Get.offAllNamed(AppConstant.pageMainHome);
+
+        AppDialog(context: context).normalDialog(
+            title: 'ยินดีด้วย สมัครสำเร็จ',
+            detail: 'กรุณาเปิดแอพเข้ามาใหม',
+            firstBotton: WidgetButton(
+              label: 'OK',
+              pressFunc: () {
+                exit(0);
+              },
+            ));
       });
     }).catchError((onError) {
       AppDialog(context: context)

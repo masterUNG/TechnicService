@@ -7,6 +7,7 @@ import 'package:technicservice/models/banner_model.dart';
 import 'package:technicservice/models/referance_model.dart';
 import 'package:technicservice/models/typetechnic_model.dart';
 import 'package:technicservice/models/user_model.dart';
+import 'package:technicservice/utility/app_constant.dart';
 
 class AppController extends GetxController {
   RxBool redEye = true.obs;
@@ -20,8 +21,29 @@ class AppController extends GetxController {
   RxList<File> files = <File>[].obs;
   RxList<String> typeUsers = <String>[].obs;
   RxList<ReferanceModel> referanceModels = <ReferanceModel>[].obs;
-
   RxList<BannerModel> bannerModels = <BannerModel>[].obs;
+
+  RxList<UserModel> technicUserModels = <UserModel>[].obs;
+
+  Future<void> readTechnicUserModel() async {
+    if (technicUserModels.isNotEmpty) {
+      technicUserModels.clear();
+    }
+
+     await FirebaseFirestore.instance
+          .collection('user')
+          .where('typeUser', isEqualTo: AppConstant.typeUsers[1])
+          .get()
+          .then((value) {
+       
+        for (var element in value.docs) {
+          UserModel model = UserModel.fromMap(element.data());
+          technicUserModels.add(model);
+        }
+      });
+
+
+  }
 
   Future<void> readBanner() async {
     if (bannerModels.isNotEmpty) {

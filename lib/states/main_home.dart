@@ -53,9 +53,11 @@ class _MainHomeState extends State<MainHome> {
   }
 
   Future<void> checkLogin() async {
-    print('userModelLogins --> ${controller.userModelLogins}');
+    print('##8dec checkLogin work userModelLogins --> ${controller.userModelLogins}');
     await controller.findUserModelLogins().then((value) =>
-        print('userModelLogins last --> ${controller.userModelLogins}'));
+        print('##8dec userModelLogins last --> ${controller.userModelLogins}'));
+
+         load = false;
 
     FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event == null) {
@@ -65,7 +67,7 @@ class _MainHomeState extends State<MainHome> {
         controller.findUserModel(uid: event.uid);
       }
 
-      load = false;
+     
       setState(() {});
     });
   }
@@ -83,7 +85,7 @@ class _MainHomeState extends State<MainHome> {
                 textStyle: AppConstant().h2Style(),
               ),
             ),
-            drawer: load
+            drawer: load 
                 ? const WidgetProgress()
                 : Drawer(
                     child: Column(
