@@ -14,6 +14,7 @@ class UserModel {
   final List<String>? skillTechnic;
   final GeoPoint geoPoint;
   final String? urlProfile;
+  
 
   UserModel({
     required this.name,

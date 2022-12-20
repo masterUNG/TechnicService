@@ -17,6 +17,13 @@ import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
+  Future<UserModel> findUserModel({required String uid}) async {
+    var result =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+    UserModel userModel = UserModel.fromMap(result.data()!);
+    return userModel;
+  }
+
   String cutWord({required String word, required int length}) {
     String result = word;
     if (result.length >= length) {

@@ -21,7 +21,7 @@ class AppController extends GetxController {
   RxList<File> files = <File>[].obs;
   RxList<String> typeUsers = <String>[].obs;
   RxList<ReferanceModel> referanceModels = <ReferanceModel>[].obs;
-  RxList<UserModel> technicReferanceUserModels = <UserModel>[].obs;
+ 
 
   RxList<BannerModel> bannerModels = <BannerModel>[].obs;
 
@@ -83,28 +83,22 @@ class AppController extends GetxController {
   Future<void> readAllReferance() async {
     if (referanceModels.isNotEmpty) {
       referanceModels.clear();
-      technicReferanceUserModels.clear();
+     
     }
 
     await FirebaseFirestore.instance
         .collection('referance')
         .get()
         .then((value) async {
-      loadRecerance.value = false;
+     
+        loadRecerance.value = false;
 
       if (value.docs.isNotEmpty) {
         for (var element in value.docs) {
           ReferanceModel model = ReferanceModel.fromMap(element.data());
           referanceModels.add(model);
 
-          await FirebaseFirestore.instance
-              .collection('user')
-              .doc(model.uidTechnic)
-              .get()
-              .then((value) {
-            UserModel userModel = UserModel.fromMap(value.data()!);
-            technicReferanceUserModels.add(userModel);
-          });
+          
         }
       }
     });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:get/get.dart';
+import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_service.dart';
@@ -24,7 +25,7 @@ class _MainCenterState extends State<MainCenter> {
     super.initState();
     controller.readBanner();
     controller.readTechnicUserModel();
-    // controller.readAllReferance();
+    controller.readAllReferance();
   }
 
   List<Widget> createWidgets() {
@@ -44,7 +45,8 @@ class _MainCenterState extends State<MainCenter> {
       return GetX(
           init: AppController(),
           builder: (AppController appController) {
-           
+            print('load --> ${appController.loadRecerance}');
+
             return ListView(
               children: [
                 const WidgetShowHead(head: 'Banner :'),
@@ -101,7 +103,7 @@ class _MainCenterState extends State<MainCenter> {
                               text: AppService().cutWord(
                                   word: appController
                                       .referanceModels[index].nameJob,
-                                  length: 50),
+                                  length: 25),
                               textStyle: AppConstant()
                                   .h3Style(fontWeight: FontWeight.w700),
                             ),
@@ -113,9 +115,17 @@ class _MainCenterState extends State<MainCenter> {
                               textStyle:
                                   AppConstant().h3Style(color: Colors.red),
                             ),
-                            WidgetText(
-                                text: appController
-                                    .technicReferanceUserModels[index].name)
+                            Row(
+                              children: [
+                                WidgetImageInternet(width: 48,height: 48,
+                                    urlPath: appController
+                                        .referanceModels[index]
+                                        .urlImageTechnic),
+                                WidgetText(
+                                    text: appController
+                                        .referanceModels[index].nameTechnic),
+                              ],
+                            )
                           ],
                         ),
                       ),
