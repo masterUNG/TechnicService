@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:get/get.dart';
-import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_service.dart';
@@ -9,6 +8,7 @@ import 'package:technicservice/widgets/widget_image_internet.dart';
 import 'package:technicservice/widgets/widget_progress.dart';
 import 'package:technicservice/widgets/widget_show_head.dart';
 import 'package:technicservice/widgets/widget_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainCenter extends StatefulWidget {
   const MainCenter({super.key});
@@ -33,7 +33,19 @@ class _MainCenterState extends State<MainCenter> {
 
     var widgets = <Widget>[];
     for (var element in controller.bannerModels) {
-      widgets.add(WidgetImageInternet(urlPath: element.image));
+      widgets.add(
+        WidgetImageInternet(
+          urlPath: element.image,
+          tapFunc: () async {
+            String url = element.link;
+            print('url ==> $url');
+
+            Uri uri = Uri.parse(url);
+            await canLaunchUrl(uri) ? await launchUrl(uri) : throw 'Cannot OpenUrl' ;
+
+          },
+        ),
+      );
     }
 
     return widgets;
@@ -117,7 +129,9 @@ class _MainCenterState extends State<MainCenter> {
                             ),
                             Row(
                               children: [
-                                WidgetImageInternet(width: 48,height: 48,
+                                WidgetImageInternet(
+                                    width: 48,
+                                    height: 48,
                                     urlPath: appController
                                         .referanceModels[index]
                                         .urlImageTechnic),
