@@ -9,14 +9,45 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:technicservice/models/user_model.dart';
-import 'package:technicservice/states/main_home.dart';
-import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/widgets/widget_button.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
 
 class AppService {
+  Future<void> processUploadToken({required String token}) async {
+    AppController appController = Get.put(AppController());
+
+    Map<String, dynamic> map = appController.userModelLogins.last.toMap();
+    print('##25dec map --> $map');
+
+    map['token'] = token;
+    String docIdUser = appController.uidLogins.last;
+    print('##25dec map update token --> $map');
+    print('##25dec docIdUser ---> $docIdUser');
+
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(docIdUser)
+        .update(map)
+        .then((value) {
+      print('##25dec Success Update');
+    });
+  }
+
+  Future<List<String>> findDocIdUserWhereEmail({required String email}) async {
+    var strings = <String>[];
+    var resule = await FirebaseFirestore.instance
+        .collection('user')
+        .where('email', isEqualTo: email)
+        .get();
+
+    for (var element in resule.docs) {
+      strings.add(element.id);
+    }
+    return strings;
+  }
+
   Future<UserModel> findUserModel({required String uid}) async {
     var result =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();

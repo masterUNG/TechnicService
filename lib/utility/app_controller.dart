@@ -14,18 +14,19 @@ class AppController extends GetxController {
   RxInt indexTypeUser = 0.obs;
   RxInt indexBody = 0.obs;
   RxBool loadRecerance = true.obs;
-
   RxList<UserModel> userModelLogins = <UserModel>[].obs;
   RxList<String> uidLogins = <String>[].obs;
   RxList<UserModel> userModels = <UserModel>[].obs;
   RxList<File> files = <File>[].obs;
   RxList<String> typeUsers = <String>[].obs;
   RxList<ReferanceModel> referanceModels = <ReferanceModel>[].obs;
- 
-
   RxList<BannerModel> bannerModels = <BannerModel>[].obs;
-
   RxList<UserModel> technicUserModels = <UserModel>[].obs;
+
+  RxList<String> messageChats = <String>[].obs;
+
+
+
 
   Future<void> readTechnicUserModel() async {
     if (technicUserModels.isNotEmpty) {
@@ -57,16 +58,22 @@ class AppController extends GetxController {
     });
   }
 
-  Future<void> readTechnicReferance() async {
+  Future<void> readTechnicReferance({String? uidTeachnic}) async {
+    var user = FirebaseAuth.instance.currentUser;
+
+    String uid = user!.uid;
+
+    if (uidTeachnic != null) {
+      uid = uidTeachnic;
+    }
+
     if (referanceModels.isNotEmpty) {
       referanceModels.clear();
     }
 
-    var user = FirebaseAuth.instance.currentUser;
-
     await FirebaseFirestore.instance
         .collection('referance')
-        .where('uidTechnic', isEqualTo: user!.uid)
+        .where('uidTechnic', isEqualTo: uid)
         .get()
         .then((value) {
       loadRecerance.value = false;
@@ -83,22 +90,18 @@ class AppController extends GetxController {
   Future<void> readAllReferance() async {
     if (referanceModels.isNotEmpty) {
       referanceModels.clear();
-     
     }
 
     await FirebaseFirestore.instance
         .collection('referance')
         .get()
         .then((value) async {
-     
-        loadRecerance.value = false;
+      loadRecerance.value = false;
 
       if (value.docs.isNotEmpty) {
         for (var element in value.docs) {
           ReferanceModel model = ReferanceModel.fromMap(element.data());
           referanceModels.add(model);
-
-          
         }
       }
     });

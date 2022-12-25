@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:technicservice/bodys/main_center.dart';
@@ -9,6 +12,7 @@ import 'package:technicservice/bodys/referance_teachnic.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
+import 'package:technicservice/utility/app_service.dart';
 import 'package:technicservice/widgets/widget_image.dart';
 import 'package:technicservice/widgets/widget_menu.dart';
 import 'package:technicservice/widgets/widget_progress.dart';
@@ -37,7 +41,7 @@ class _MainHomeState extends State<MainHome> {
   ];
 
   var titles = <String>[
-    'หน้าหลัก',
+    'หน้าแรก',
     'ข่าวสาร',
     'Profile',
     'Referance',
@@ -49,25 +53,34 @@ class _MainHomeState extends State<MainHome> {
     super.initState();
     checkLogin();
     controller.readAllTypeUser();
-    
   }
 
   Future<void> checkLogin() async {
-    print('##8dec checkLogin work userModelLogins --> ${controller.userModelLogins}');
+    print(
+        '##8dec checkLogin work userModelLogins --> ${controller.userModelLogins}');
     await controller.findUserModelLogins().then((value) =>
         print('##8dec userModelLogins last --> ${controller.userModelLogins}'));
 
-         load = false;
+    load = false;
 
-    FirebaseAuth.instance.authStateChanges().listen((event) {
+    FirebaseAuth.instance.authStateChanges().listen((event) async {
       if (event == null) {
         statusLogin = false;
       } else {
         statusLogin = true;
         controller.findUserModel(uid: event.uid);
+
+        FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+        String? token = await firebaseMessaging.getToken();
+        print('##25dec token ---> $token');
+
+        AppService().processUploadToken(token: token!);
+
+        
+
+
       }
 
-     
       setState(() {});
     });
   }
@@ -77,15 +90,17 @@ class _MainHomeState extends State<MainHome> {
     return GetX(
         init: AppController(),
         builder: (AppController appController) {
-          print('current userModel ===> ${appController.userModelLogins}');
-          return Scaffold(backgroundColor: AppConstant.bgColor,
+          print(
+              '##25dec current userModel ===> ${appController.userModelLogins}');
+          return Scaffold(
+            backgroundColor: AppConstant.bgColor,
             appBar: AppBar(
               title: WidgetText(
                 text: titles[appController.indexBody.value],
                 textStyle: AppConstant().h2Style(),
               ),
             ),
-            drawer: load 
+            drawer: load
                 ? const WidgetProgress()
                 : Drawer(
                     child: Column(
@@ -96,7 +111,7 @@ class _MainHomeState extends State<MainHome> {
                             path: 'images/home.png',
                             size: 36,
                           ),
-                          title: 'หน้าหลัก',
+                          title: 'หน้าแรก',
                           tapFunc: () {
                             appController.indexBody.value = 0;
                             Get.back();
