@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:technicservice/models/message_model.dart';
 
 import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
@@ -108,8 +110,27 @@ class _ChatPageState extends State<ChatPage> {
                       title: 'ยังไม่มี ข้อความ',
                       detail: 'กรุณากรอก ข้อความด้วย คะ');
                 } else {
-                  if (appController.userModelLogins.last.typeUser == AppConstant.typeUsers[0]) {
+                  if (appController.userModelLogins.last.typeUser ==
+                      AppConstant.typeUsers[0]) {
                     //for user
+                    appController.messageChats.add(textEditingController.text);
+                    textEditingController.text = '';
+                    print('##28dec message --> ${appController.messageChats}');
+
+                    MessageModel messageModel = MessageModel(
+                        message: appController.messageChats.last,
+                        uidPost: appController.uidLogins.last,
+                        timestamp: Timestamp.fromDate(DateTime.now()));
+                    print('##28dec messageModel --> ${messageModel.toMap()}');
+
+                    AppService().insertMessage(messageModel: messageModel);
+
+                    if (userModelTeachnic!.token!.isNotEmpty) {
+                      AppService().processSendNoti(
+                          title: 'มีข้อความถึงคุณ',
+                          body: appController.messageChats.last,
+                          token: userModelTeachnic!.token!);
+                    }
                   } else {
                     //for Technic
                   }
