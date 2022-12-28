@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
+import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
 import 'package:technicservice/utility/app_service.dart';
 import 'package:technicservice/widgets/widget_button.dart';
@@ -25,10 +27,25 @@ class _ChatPageState extends State<ChatPage> {
   UserModel? userModelTeachnic;
   TextEditingController textEditingController = TextEditingController();
 
+  AppController controller = Get.put(AppController());
+
   @override
   void initState() {
     super.initState();
     userModelTeachnic = widget.userModelTechnic;
+    processReadChat();
+  }
+
+  Future<void> processReadChat() async {
+    await AppService()
+        .findDocIdUserWhereEmail(email: userModelTeachnic!.email)
+        .then((value) {
+      String uidTechnic = value.last;
+      print('##28dec uidTechnic ---> $uidTechnic');
+
+      controller.findDocIdChats(
+          uidLogin: controller.uidLogins.last, uidFriend: uidTechnic);
+    });
   }
 
   @override
@@ -42,24 +59,34 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
       body: LayoutBuilder(builder: (context, BoxConstraints boxConstraints) {
-        return SizedBox(
-          width: boxConstraints.maxWidth,
-          height: boxConstraints.maxHeight,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => FocusScope.of(context).requestFocus(FocusScopeNode()),
-            child: Stack(
-              children: [
-                contentForm(boxConstraints: boxConstraints),
-              ],
-            ),
-          ),
-        );
+        return GetX(
+            init: AppController(),
+            builder: (AppController appController) {
+              print('##28dec docIdChats --> ${appController.docIdChats}');
+              return SizedBox(
+                width: boxConstraints.maxWidth,
+                height: boxConstraints.maxHeight,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () =>
+                      FocusScope.of(context).requestFocus(FocusScopeNode()),
+                  child: Stack(
+                    children: [
+                      contentForm(
+                          boxConstraints: boxConstraints,
+                          appController: appController),
+                    ],
+                  ),
+                ),
+              );
+            });
       }),
     );
   }
 
-  Widget contentForm({required BoxConstraints boxConstraints}) {
+  Widget contentForm(
+      {required BoxConstraints boxConstraints,
+      required AppController appController}) {
     return Positioned(
       bottom: 0,
       child: SizedBox(
@@ -81,7 +108,11 @@ class _ChatPageState extends State<ChatPage> {
                       title: 'ยังไม่มี ข้อความ',
                       detail: 'กรุณากรอก ข้อความด้วย คะ');
                 } else {
-                  
+                  if (appController.userModelLogins.last.typeUser == AppConstant.typeUsers[0]) {
+                    //for user
+                  } else {
+                    //for Technic
+                  }
                 }
               },
             )
