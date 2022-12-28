@@ -76,9 +76,7 @@ class _MainHomeState extends State<MainHome> {
 
         AppService().processUploadToken(token: token!);
 
-        
-
-
+        AppService().monitorNoti(context: context);
       }
 
       setState(() {});
