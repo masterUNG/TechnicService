@@ -110,8 +110,8 @@ class AppService {
     return result;
   }
 
-  String dateTimeToString({required DateTime dateTime}) {
-    DateFormat dateFormat = DateFormat('dd MMM yyyy');
+  String dateTimeToString({required DateTime dateTime, String? format}) {
+    DateFormat dateFormat = DateFormat(format ?? 'dd MMM yyyy');
     return dateFormat.format(dateTime);
   }
 

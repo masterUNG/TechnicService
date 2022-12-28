@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:technicservice/models/banner_model.dart';
 import 'package:technicservice/models/chat_model.dart';
+import 'package:technicservice/models/message_model.dart';
 import 'package:technicservice/models/referance_model.dart';
 import 'package:technicservice/models/typetechnic_model.dart';
 import 'package:technicservice/models/user_model.dart';
@@ -23,10 +24,34 @@ class AppController extends GetxController {
   RxList<ReferanceModel> referanceModels = <ReferanceModel>[].obs;
   RxList<BannerModel> bannerModels = <BannerModel>[].obs;
   RxList<UserModel> technicUserModels = <UserModel>[].obs;
- 
 
   RxList<String> docIdChats = <String>[].obs;
   RxList<String> messageChats = <String>[].obs;
+  RxList<MessageModel> messageModels = <MessageModel>[].obs;
+
+  Future<void> readMessageModels() async {
+    
+    if (docIdChats.isNotEmpty) {
+      print('##28dec from readMessageModel docId ---> ${docIdChats.last}');
+      await FirebaseFirestore.instance
+          .collection('chat')
+          .doc(docIdChats.last)
+          .collection('message').orderBy('timestamp')
+          .snapshots()
+          .listen((event) {
+        if (messageModels.isNotEmpty) {
+          messageModels.clear();
+        }
+
+        if (event.docs.isNotEmpty) {
+          for (var element in event.docs) {
+            MessageModel messageModel = MessageModel.fromMap(element.data());
+            messageModels.add(messageModel);
+          }
+        }
+      });
+    }
+  }
 
   Future<void> findDocIdChats(
       {required String uidLogin, required String uidFriend}) async {
@@ -38,7 +63,7 @@ class AppController extends GetxController {
         .collection('chat')
         .get()
         .then((value) async {
-      print('##28dec value --> ${value.docs}');
+      print('##28dec from findDocIdChars value --> ${value.docs}');
 
       bool createDocument = true;
 
@@ -49,6 +74,7 @@ class AppController extends GetxController {
               (chatModel.friends.contains(uidFriend))) {
             docIdChats.add(element.id);
             createDocument = false;
+            readMessageModels();
           }
         }
         if (createDocument) {
