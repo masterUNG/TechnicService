@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppConstant {
+  static String urlPromptPay = 'https://firebasestorage.googleapis.com/v0/b/teachnicservice.appspot.com/o/admin%2Fqrui-1672729623878.png?alt=media&token=8635c628-39d4-478a-8bbe-8613cfb4f452';
   static String urlFreeProfile =
       'https://firebasestorage.googleapis.com/v0/b/teachnicservice.appspot.com/o/profile%2F3605332_construction_engineer_hard_hat_helmet_icon.png?alt=media&token=18de348d-309c-4ed1-a003-bd6d9a70342e';
 
@@ -32,7 +33,8 @@ class AppConstant {
   BoxDecoration chatLiftBox({required BuildContext context}) {
     return BoxDecoration(
         color: Theme.of(context).primaryColorLight,
-        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10)));
+        borderRadius:
+            const BorderRadius.only(bottomRight: Radius.circular(10)));
   }
 
   BoxDecoration borderCurveBox() {
