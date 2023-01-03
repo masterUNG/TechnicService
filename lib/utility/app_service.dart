@@ -25,7 +25,7 @@ class AppService {
     String urlAPI =
         'https://www.androidthai.in.th/fluttertraining/noti/apiNotiUng.php?isAdd=true&token=$token&title=$title&body=$body';
     await Dio().get(urlAPI).then((value) {
-      print('##28dec Send Noti Success');
+      print('##3jan Send Noti Success at token --> $token');
     });
   }
 

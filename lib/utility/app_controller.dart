@@ -10,14 +10,17 @@ import 'package:technicservice/models/referance_model.dart';
 import 'package:technicservice/models/typetechnic_model.dart';
 import 'package:technicservice/models/user_model.dart';
 import 'package:technicservice/utility/app_constant.dart';
+import 'package:technicservice/utility/app_service.dart';
 
 class AppController extends GetxController {
   RxBool redEye = true.obs;
   RxInt indexTypeUser = 0.obs;
   RxInt indexBody = 0.obs;
   RxBool loadRecerance = true.obs;
+
   RxList<UserModel> userModelLogins = <UserModel>[].obs;
   RxList<String> uidLogins = <String>[].obs;
+
   RxList<UserModel> userModels = <UserModel>[].obs;
   RxList<File> files = <File>[].obs;
   RxList<String> typeUsers = <String>[].obs;
@@ -29,14 +32,68 @@ class AppController extends GetxController {
   RxList<String> messageChats = <String>[].obs;
   RxList<MessageModel> messageModels = <MessageModel>[].obs;
 
+  RxList<String> docIdChatUserTechnics = <String>[].obs;
+  RxList<ChatModel> chatModelUserTechnic = <ChatModel>[].obs;
+  RxList<String> nameUserOrTechnics = <String>[].obs;
+  RxList<String> lastMessages = <String>[].obs;
+
+  Future<void> readDocIdChatUserTechnics({required String uid}) async {
+    if (docIdChatUserTechnics.isNotEmpty) {
+      docIdChatUserTechnics.clear();
+      chatModelUserTechnic.clear();
+      nameUserOrTechnics.clear();
+      lastMessages.clear();
+    }
+
+    await FirebaseFirestore.instance
+        .collection('chat')
+        .get()
+        .then((value) async {
+      if (value.docs.isNotEmpty) {
+        for (var element in value.docs) {
+          ChatModel chatModel = ChatModel.fromMap(element.data());
+          if (chatModel.friends.contains(uid)) {
+            docIdChatUserTechnics.add(element.id);
+            chatModelUserTechnic.add(chatModel);
+
+            var friends = chatModel.friends;
+            friends.remove(uid);
+
+            await AppService().findUserModel(uid: friends.last).then((value) {
+              nameUserOrTechnics.add(value.name);
+            });
+
+            await FirebaseFirestore.instance
+                .collection('chat')
+                .doc(element.id)
+                .collection('message')
+                .orderBy('timestamp')
+                .get()
+                .then((value) {
+              if (value.docs.isNotEmpty) {
+                MessageModel? messageModel;
+                for (var element in value.docs) {
+                  messageModel = MessageModel.fromMap(element.data());
+                }
+                lastMessages.add(messageModel?.message ?? 'Last Message');
+              } else {
+                lastMessages.add('');
+              }
+            });
+          }
+        }
+      }
+    });
+  }
+
   Future<void> readMessageModels() async {
-    
     if (docIdChats.isNotEmpty) {
       print('##28dec from readMessageModel docId ---> ${docIdChats.last}');
       await FirebaseFirestore.instance
           .collection('chat')
           .doc(docIdChats.last)
-          .collection('message').orderBy('timestamp')
+          .collection('message')
+          .orderBy('timestamp')
           .snapshots()
           .listen((event) {
         if (messageModels.isNotEmpty) {
