@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:technicservice/states/chat_page_technic.dart';
 import 'package:technicservice/states/payment_page.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
@@ -55,29 +56,48 @@ class _MessageTeachnicState extends State<MessageTeachnic> {
                         dialogRequire(context);
                       } else if (docIdChats!.isEmpty) {
                         //ยังไม่่เคยคุยกับใครเลย
-                        AppDialog(context: context).normalDialog(
-                            title: 'Require ตัดเงิน',
-                            detail:
-                                'ยอดเงินที่คุณมี $money บาท ในการคุยกับ ลูกค้่า ระบบจะตัดเงินออก 32.10 บาท',
-                            firstBotton: WidgetTextButton(
-                              label: 'ยินดี',
-                              pressFunc: () {
-                                AppService()
-                                    .processPayMoneyForChat(
-                                        docIdChat: appController
-                                            .docIdChatUserTechnics[index])
-                                    .then((value) {
-                                  Get.back();
-                                });
-                              },
-                            ));
+                        dialogPayMoney(context, money, appController, index);
                       } else {
                         //Check ว่า user เคยคุยด้วยไหม ?
+
+                        String docIdChat =
+                            appController.docIdChatUserTechnics.last;
+
+                        if (appController.userModelLogins.last.docIdChats!
+                            .contains(docIdChat)) {
+                          print(
+                              '##6jan Check ว่า user เคยคุยด้วยไหม เคยคุยกันแล้ว');
+
+                          Get.to(ChatPageTechnic(docIdChat: docIdChat, nameUser: appController.nameUserOrTechnics[index],));
+                        } else {
+                          print(
+                              '##6jan Check ว่า user เคยคุยด้วยไหม ไม่เคยคุยกัน');
+                          dialogPayMoney(context, money, appController, index);
+                        }
                       }
                     },
                   ),
                 );
         });
+  }
+
+  void dialogPayMoney(BuildContext context, double? money,
+      AppController appController, int index) {
+    AppDialog(context: context).normalDialog(
+        title: 'Require ตัดเงิน',
+        detail:
+            'ยอดเงินที่คุณมี $money บาท ในการคุยกับ ลูกค้่า ระบบจะตัดเงินออก 32.10 บาท',
+        firstBotton: WidgetTextButton(
+          label: 'ยินดี',
+          pressFunc: () {
+            AppService()
+                .processPayMoneyForChat(
+                    docIdChat: appController.docIdChatUserTechnics[index])
+                .then((value) {
+              Get.back();
+            });
+          },
+        ));
   }
 
   void dialogRequire(BuildContext context) {
