@@ -46,7 +46,7 @@ class _MessageTeachnicState extends State<MessageTeachnic> {
                     tapFunc: () {
                       var docIdChats =
                           appController.userModelLogins.last.docIdChats;
-                      print('##3jan docIdChats --> $docIdChats');
+                      print('##6jan docIdChats --> $docIdChats');
 
                       if (docIdChats!.isEmpty) {
                         AppDialog(context: context).normalDialog(

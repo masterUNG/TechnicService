@@ -15,7 +15,9 @@ class AppDialog {
   void materialDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(title: WidgetText(text: 'Materialdialog'),),
+      builder: (context) => AlertDialog(
+        title: WidgetText(text: 'Materialdialog'),
+      ),
     );
   }
 
