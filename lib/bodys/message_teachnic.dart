@@ -6,6 +6,7 @@ import 'package:technicservice/states/payment_page.dart';
 import 'package:technicservice/utility/app_constant.dart';
 import 'package:technicservice/utility/app_controller.dart';
 import 'package:technicservice/utility/app_dialog.dart';
+import 'package:technicservice/utility/app_service.dart';
 import 'package:technicservice/widgets/widget_menu.dart';
 import 'package:technicservice/widgets/widget_text.dart';
 import 'package:technicservice/widgets/widget_text_button.dart';
@@ -48,22 +49,48 @@ class _MessageTeachnicState extends State<MessageTeachnic> {
                           appController.userModelLogins.last.docIdChats;
                       print('##6jan docIdChats --> $docIdChats');
 
-                      if (docIdChats!.isEmpty) {
+                      var money = appController.userModelLogins.last.money;
+
+                      if (money == 0.0) {
+                        dialogRequire(context);
+                      } else if (docIdChats!.isEmpty) {
+                        //ยังไม่่เคยคุยกับใครเลย
                         AppDialog(context: context).normalDialog(
-                          title: 'ยังไม่มีสิทธ์ Chat',
-                          detail: 'กรุณา เปิดสิทธ์ เข้าใช้งาน',
-                          firstBotton: WidgetTextButton(
-                            label: 'เปิดสิทธ์ใช้งาน',
-                            pressFunc: () {
-                              Get.back();
-                              Get.to(const PaymentPage());
-                            },
-                          ),
-                        );
-                      } else {}
+                            title: 'Require ตัดเงิน',
+                            detail:
+                                'ยอดเงินที่คุณมี $money บาท ในการคุยกับ ลูกค้่า ระบบจะตัดเงินออก 32.10 บาท',
+                            firstBotton: WidgetTextButton(
+                              label: 'ยินดี',
+                              pressFunc: () {
+                                AppService()
+                                    .processPayMoneyForChat(
+                                        docIdChat: appController
+                                            .docIdChatUserTechnics[index])
+                                    .then((value) {
+                                  Get.back();
+                                });
+                              },
+                            ));
+                      } else {
+                        //Check ว่า user เคยคุยด้วยไหม ?
+                      }
                     },
                   ),
                 );
         });
+  }
+
+  void dialogRequire(BuildContext context) {
+    AppDialog(context: context).normalDialog(
+      title: 'ยังไม่มีสิทธ์ Chat',
+      detail: 'กรุณา เปิดสิทธ์ เข้าใช้งาน',
+      firstBotton: WidgetTextButton(
+        label: 'เปิดสิทธ์ใช้งาน',
+        pressFunc: () {
+          Get.back();
+          Get.to(const PaymentPage());
+        },
+      ),
+    );
   }
 }
