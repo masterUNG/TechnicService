@@ -70,7 +70,10 @@ class _MessageTeachnicState extends State<MessageTeachnic> {
                           print(
                               '##6jan Check ว่า user เคยคุยด้วยไหม เคยคุยกันแล้ว');
 
-                          Get.to(ChatPageTechnic(docIdChat: docIdChat, nameUser: appController.nameUserOrTechnics[index],));
+                          Get.to(ChatPageTechnic(
+                            docIdChat: docIdChat,
+                            nameUser: appController.nameUserOrTechnics[index],
+                          ));
                         } else {
                           print(
                               '##6jan Check ว่า user เคยคุยด้วยไหม ไม่เคยคุยกัน');
