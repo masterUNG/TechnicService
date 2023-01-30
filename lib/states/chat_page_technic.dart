@@ -55,53 +55,66 @@ class _ChatPageTechnicState extends State<ChatPageTechnic> {
                   '##7jan messageModels ---> ${appController.messageModels.length}');
               return appController.messageModels.isEmpty
                   ? const SizedBox()
-                  : Stack(
-                      children: [
-                        listMessageChat(appController),
-                        Positioned(
-                          bottom: 0,
-                          child: SizedBox(
-                            width: boxConstraints.maxWidth,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                WidgetForm(
-                                  textEditingController: textEditingController,
-                                  hint: 'ข้อความ',
-                                  marginTop: 0,
-                                  changeFunc: (p0) {},
-                                ),
-                                WidgetButton(
-                                  label: 'ส่งข้อความ',
-                                  pressFunc: () {
-                                    print(
-                                        '##7jan text --> ${textEditingController.text}');
-
-                                    if (textEditingController.text.isEmpty) {
-                                      AppDialog(context: context).normalDialog(
-                                          title: 'ไม่มีข้อความ',
-                                          detail: 'กรุณากรอกข้อความด้วย');
-                                    } else {
-                                      MessageModel messageModel = MessageModel(
-                                          message: textEditingController.text,
-                                          uidPost: appController.uidLogins.last,
-                                          timestamp: Timestamp.fromDate(
-                                              DateTime.now()));
-
-                                      AppService()
-                                          .insertMessage(
-                                              messageModel: messageModel)
-                                          .then((value) {
-                                        textEditingController.text = '';
-                                      });
-                                    }
-                                  },
-                                )
-                              ],
-                            ),
+                  : SizedBox(
+                      width: boxConstraints.maxWidth,
+                      height: boxConstraints.maxHeight,
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            height: boxConstraints.maxHeight - 60,
+                            child: listMessageChat(appController),
                           ),
-                        )
-                      ],
+                          Positioned(
+                            bottom: 0,
+                            child: SizedBox(
+                              width: boxConstraints.maxWidth,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  WidgetForm(
+                                    textEditingController:
+                                        textEditingController,
+                                    hint: 'ข้อความ',
+                                    marginTop: 0,
+                                    changeFunc: (p0) {},
+                                  ),
+                                  WidgetButton(
+                                    label: 'ส่งข้อความ',
+                                    pressFunc: () {
+                                      print(
+                                          '##7jan text --> ${textEditingController.text}');
+
+                                      if (textEditingController.text.isEmpty) {
+                                        AppDialog(context: context)
+                                            .normalDialog(
+                                                title: 'ไม่มีข้อความ',
+                                                detail: 'กรุณากรอกข้อความด้วย');
+                                      } else {
+                                        MessageModel messageModel =
+                                            MessageModel(
+                                                message:
+                                                    textEditingController.text,
+                                                uidPost: appController
+                                                    .uidLogins.last,
+                                                timestamp: Timestamp.fromDate(
+                                                    DateTime.now()));
+
+                                        AppService()
+                                            .insertMessage(
+                                                messageModel: messageModel)
+                                            .then((value) {
+                                          textEditingController.text = '';
+                                        });
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     );
             });
       }),
@@ -112,6 +125,10 @@ class _ChatPageTechnicState extends State<ChatPageTechnic> {
     return ListView.builder(
       itemCount: appController.messageModels.length,
       itemBuilder: (context, index) => Row(
+        mainAxisAlignment: appController.uidLogins.last ==
+                appController.messageModels[index].uidPost
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: [
           Container(
             margin: const EdgeInsets.only(bottom: 4),
